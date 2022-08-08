@@ -10,7 +10,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
-  final User user = User(password: '', username: '', email: '');
+  final User user = User(password: '', name: '', email: '',phone:'',location_id: '');
   late String confirmPassword;
 
   @override
@@ -35,7 +35,7 @@ class _SignUpState extends State<SignUp> {
                     },
                     onSaved: (value) {
                       setState(() {
-                        user.username = value!;
+                        user.name = value!;
                       });
                     },
                     decoration: InputDecoration(
@@ -105,6 +105,47 @@ class _SignUpState extends State<SignUp> {
                   ),
                   obscureText: true,
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please Enter phone number';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      setState(() {
+                       user.phone = value!;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter phone number',
+                      labelText: 'phone number',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please Enter location';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      setState(() {
+                        user.location_id = value!;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter location',
+                      labelText: 'location',
+                    ),
+                  ),
+                ),
+
                 Padding(
                   padding: const EdgeInsets.only(top: 25.0),
                   child: SizedBox(

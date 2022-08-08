@@ -1,11 +1,30 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_ui_kit/callApi.dart';
+import 'package:flutter_ecommerce_ui_kit/models/getNewProduct.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
-class Products extends StatelessWidget {
+
+
+
+class Products extends StatefulWidget {
+
+  @override
+  State<Products> createState() => _ProductsState();
+}
+
+class _ProductsState extends State<Products> {
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    final imageUrl = ModalRoute.of(context)!.settings.arguments;
+     ProductModel  product = ModalRoute.of(context)!.settings.arguments as ProductModel;
+     print(product.name);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Product Detail'),
@@ -21,10 +40,10 @@ class Products extends StatelessWidget {
                 width: double.infinity,
                   height: 260,
                   child: Hero(
-                    tag: imageUrl!,
+                    tag: 'http://10.0.2.2:8000/image/${product.image}',
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
-                      imageUrl: imageUrl.toString(),
+                      imageUrl: 'http://10.0.2.2:8000/image/${product.image}',
                       placeholder: (context, url) =>
                           Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) => new Icon(Icons.error),
@@ -40,7 +59,7 @@ class Products extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, bottom: 15),
                           child: Text(
-                            'Product Title Name',
+                            product.name!=null?product.name:'',
                             style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.w600),
                           ),
                         ),
@@ -55,7 +74,7 @@ class Products extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(right: 10.0),
                                   child: Text(
-                                    '\$90',
+                                    '${product.sell_price}',
                                     style: TextStyle(
                                         color: Theme.of(context).primaryColor,
                                         fontSize: 20,
@@ -63,14 +82,7 @@ class Products extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                Text(
-                                    '\$190',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                        fontSize: 16,
-                                        decoration: TextDecoration.lineThrough
-                                    )
-                                ),
+
                               ],
                             ),
                             Row(
@@ -103,8 +115,8 @@ class Products extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 10.0),
                                 child: Text(
-                                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. but also the leap into electronic typesetting Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-                                  style: TextStyle(color: Colors.black, fontSize: 16),
+                                  product.description!=null?product.description:''
+                                 , style: TextStyle(color: Colors.black, fontSize: 16),
                                 ),
                               )
                           )

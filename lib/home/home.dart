@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_ui_kit/callApi.dart';
 import 'package:flutter_ecommerce_ui_kit/localizations.dart';
+import 'package:flutter_ecommerce_ui_kit/models/getNewProduct.dart';
 
 import 'drawer.dart';
 import 'slider.dart';
 
+List<ProductModel> product = <ProductModel>[];
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -12,13 +17,49 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final List<String> imgList = [
-    'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-    'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
-    'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-    'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-    'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
-    'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+    'https://martinvalen.com/13249-large_default/chunky-sneakers-shoes-white-black.jpg',
+    'https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2F0d%2F2a%2F0d2a3fe0737172087a7f5fd5f5898ae8b443769d.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]',
+    'https://assets.ajio.com/medias/sys_master/root/20210403/1V0O/606861eff997dd7b645d1800/-473Wx593H-461088468-blue-MODEL.jpg',
+    'https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2F42%2F73%2F4273adb72518d43696a1d8b8cf83d411a32f62d1.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5Bladies_dresses_camidresses%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtTrlSpzJs5fw0Ztj79ol-KNHuKE80-L68HA&usqp=CAU',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuPZRCLf6Y47Obx6R5RVDKTkwnRiGw1bVRMg&usqp=CAU'
   ];
+
+
+
+
+  ///////lana///
+  List<ProductModel> _product= <ProductModel>[];
+  void initState() {
+    _FetchProuduct().then((value) {
+      setState(() {
+        _product.addAll(value);
+        product.clear();
+        product.addAll(value);
+      });
+    });
+    super.initState();
+  }
+
+  Future<List<ProductModel>> _FetchProuduct() async {
+    var response = await CallApi().getdata('products');
+     // print(response.body);
+    var product = <ProductModel>[];
+    var item = json.decode(response.body);
+    print(item);
+
+    for (var i in item) {
+      product.add(ProductModel.fromJson(i));
+      print("iam heeeeeerererrerre");
+    }
+
+    return product;
+  }
+
+
+
+  ////////lana////
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,65 +113,73 @@ class _HomeState extends State<Home> {
                       Container(
                         margin: EdgeInsets.symmetric(vertical: 8.0),
                         height: 240.0,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: imgList.map((i) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                  width: 140.0,
-                                  child: Card(
-                                    clipBehavior: Clip.antiAlias,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, '/products',
-                                            arguments: i);
-                                      },
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          SizedBox(
-                                            height: 160,
-                                            child: Hero(
-                                              tag: '$i',
-                                              child: CachedNetworkImage(
-                                                fit: BoxFit.cover,
-                                                imageUrl: i,
-                                                placeholder: (context, url) =>
-                                                    Center(
-                                                        child:
-                                                            CircularProgressIndicator()),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        new Icon(Icons.error),
-                                              ),
-                                            ),
-                                          ),
-                                          ListTile(
-                                            title: Text(
-                                              'Two Gold Rings',
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                            subtitle: Text('\$200',
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme.secondary,
-                                                    fontWeight:
-                                                        FontWeight.w700)),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      Container(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _product.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                            return Container(
+                            width: 140.0,
+                            child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            child: InkWell(
+                            onTap: () {
+                            Navigator.pushNamed(
+                            context, '/products',
+                            arguments:ProductModel(_product[index].id,_product[index]. name,_product[index]. sell_price,_product[index]. size,_product[index]. color,_product[index]. description, _product[index].total_q,_product[index]. image, _product[index].brand_id,_product[index]. category_id,_product[index].vote_count) );
+                            },
+                            child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: <Widget>[
+                            SizedBox(
+                            height: 160,
+                            child: Hero(
+                            tag: '$index',
+                            child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl:'http://10.0.2.2:8000/image/${_product[index].image}' ,
+                            placeholder: (context, url) =>
+                            Center(
+                              child:
+                              CircularProgressIndicator()),
+                              errorWidget:
+                              (context, url, error) =>
+                              new Icon(Icons.error),
+                              ),
+                              ),
+                              ),
+                              ListTile(
+                              title: Text(
+                              _product[index].name,
+                              style: TextStyle(fontSize: 14),
+                              ),
+                              subtitle: Text('${_product[index].sell_price}',
+                              style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme.secondary,
+                              fontWeight:
+                              FontWeight.w700)),
+                              )
+                              ],
+                              ),
+                              ),
+                              ),
+                              );}
+
+
+
+                              ),
+                              ),
+
+
+
+
+
+
+
+                          Container(
                         child: Padding(
                           padding:
                               EdgeInsets.only(top: 6.0, left: 8.0, right: 8.0),

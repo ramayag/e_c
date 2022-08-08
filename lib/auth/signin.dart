@@ -11,7 +11,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   final UserCredential userCredential =
-      UserCredential(usernameOrEmail: '', password: '');
+      UserCredential(email: '', password: '');
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +30,17 @@ class _SignInState extends State<SignIn> {
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Please Enter Email or Username';
+                        return 'Please Enter Email ';
                       }
                       return null;
                     },
                     onSaved: (value) {
                       setState(() {
-                        userCredential.usernameOrEmail = value!;
+                        userCredential.email = value!;
                       });
                     },
                     decoration: InputDecoration(
-                      hintText: 'Enter Username Or Email',
+                      hintText: 'Enter Email',
                       labelText: 'Email',
                     ),
                   ),
