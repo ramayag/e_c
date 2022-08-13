@@ -1,5 +1,7 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_ui_kit/shop/search_image.dart';
+import 'package:flutter_ecommerce_ui_kit/shop/shop_.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_ecommerce_ui_kit/auth/auth.dart';
 import 'package:flutter_ecommerce_ui_kit/blocks/auth_block.dart';
@@ -12,6 +14,8 @@ import 'package:flutter_ecommerce_ui_kit/settings.dart';
 import 'package:flutter_ecommerce_ui_kit/shop/shop.dart';
 import 'package:flutter_ecommerce_ui_kit/wishlist.dart';
 import 'package:provider/provider.dart';
+
+import 'Category_page.dart';
 
 
 
@@ -45,7 +49,12 @@ void main() {
         '/wishlist': (BuildContext context) => WishList(),
         '/cart': (BuildContext context) => CartList(),
         '/settings': (BuildContext context) => Settings(),
-        '/products': (BuildContext context) => Products()
+        '/products': (BuildContext context) => Products(),
+        '/shop_': (BuildContext context) => Shop_(),
+        //'/Category_page': (BuildContext context) => Category_page(),
+
+
+         '/search_image':(BuildContext context) => Search_image()
       },
     ),
   ));

@@ -18,7 +18,7 @@ class _AppDrawerState extends State<AppDrawer> {
             decoration: BoxDecoration(
                 image: DecorationImage(
               fit: BoxFit.cover,
-              image: AssetImage('assets/images/drawer-header.jpg'),
+              image: AssetImage('assets/images/banner-2.png'),
             )),
             currentAccountPicture: CircleAvatar(
               backgroundImage: NetworkImage(
@@ -46,7 +46,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     style: TextStyle(color: Theme.of(context).primaryColor)),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.pushNamed(context, '/shop');
+                  Navigator.pushNamed(context, '/shop_');
                 },
               ),
               ListTile(

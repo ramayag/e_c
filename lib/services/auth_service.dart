@@ -1,25 +1,59 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_ecommerce_ui_kit/config.dart';
+import 'package:flutter_ecommerce_ui_kit/models/loginModel.dart';
 import 'package:flutter_ecommerce_ui_kit/models/user.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+saveToSharedPreferences(String key, int value) async {
+  debugPrint('key is $key, value is $value');
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt(key, value);
+}
+
+Future<int> getFromSharedPreferences(String key) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int value = prefs.get(key)as int;
+  return value;
+}
+
+// saveToSharedPreferences(String key, int value) async {
+//   debugPrint('key is $key, value is $value');
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   prefs.setInt(key, value);
+// }
+//
+// Future<int> getFromSharedPreferences(String key) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   int value = prefs.get(key)as int;
+//   return value;
+// }
 
 class AuthService {
   final storage = FlutterSecureStorage();
   // Create storage
   Future<Map> login(UserCredential userCredential) async {
-    final response = await http.post(Uri.parse('http://10.0.2.2:8000/api/user/login'), body: {
+    final response = await http.post(Uri.parse('http://192.168.43.110:8000/api/user/login'), body: {
       'email': userCredential.email,
-      'password': userCredential.password
+      'password': userCredential.password,
+
 
 
     });
 
     if (response.statusCode == 200) {
+
+
       // If the call to the server was successful, parse the JSON.
       // return User.fromJson(json.decode(response.body));
+
+      loginModel loginiduser=loginModel.fromJson(json.decode(response.body));
+      saveToSharedPreferences('user_id', loginiduser.id);
+      print("hellow from the other side");
+      print(await getFromSharedPreferences('user_id'));
       setUser(response.body);
       print(storage.toString());
       return jsonDecode(response.body);
@@ -39,13 +73,13 @@ class AuthService {
 
   Future<Map> register(User user) async {
     print("hello from the other side");
-    final response = await http.post(Uri.parse('http://10.0.2.2:8000/api/users/store'),
+    final response = await http.post(Uri.parse('http://192.168.43.110:8000/api/users/store'),
         body: {
           'name': user.name,
           'password': user.password,
           'email': user.email,
-          'location_id':user.phone,
-          'phone':user.location_id
+          'location_id':user.location_id,
+          'phone':user.phone
 
 
         });

@@ -4,11 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_ui_kit/callApi.dart';
 import 'package:flutter_ecommerce_ui_kit/localizations.dart';
+import 'package:flutter_ecommerce_ui_kit/models/getCatigorie.dart';
 import 'package:flutter_ecommerce_ui_kit/models/getNewProduct.dart';
 
 import 'drawer.dart';
 import 'slider.dart';
-
+List<CatModel> cat = <CatModel>[];
 List<ProductModel> product = <ProductModel>[];
 class Home extends StatefulWidget {
   @override
@@ -16,14 +17,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<String> imgList = [
-    'https://martinvalen.com/13249-large_default/chunky-sneakers-shoes-white-black.jpg',
-    'https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2F0d%2F2a%2F0d2a3fe0737172087a7f5fd5f5898ae8b443769d.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]',
-    'https://assets.ajio.com/medias/sys_master/root/20210403/1V0O/606861eff997dd7b645d1800/-473Wx593H-461088468-blue-MODEL.jpg',
-    'https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2F42%2F73%2F4273adb72518d43696a1d8b8cf83d411a32f62d1.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5Bladies_dresses_camidresses%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtTrlSpzJs5fw0Ztj79ol-KNHuKE80-L68HA&usqp=CAU',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuPZRCLf6Y47Obx6R5RVDKTkwnRiGw1bVRMg&usqp=CAU'
-  ];
+  // final List<String> imgList = [
+  //   'https://martinvalen.com/13249-large_default/chunky-sneakers-shoes-white-black.jpg',
+  //   'https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2F0d%2F2a%2F0d2a3fe0737172087a7f5fd5f5898ae8b443769d.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]',
+  //   'https://assets.ajio.com/medias/sys_master/root/20210403/1V0O/606861eff997dd7b645d1800/-473Wx593H-461088468-blue-MODEL.jpg',
+  //   'https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2F42%2F73%2F4273adb72518d43696a1d8b8cf83d411a32f62d1.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5Bladies_dresses_camidresses%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]',
+  //   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtTrlSpzJs5fw0Ztj79ol-KNHuKE80-L68HA&usqp=CAU',
+  //   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuPZRCLf6Y47Obx6R5RVDKTkwnRiGw1bVRMg&usqp=CAU'
+  // ];
 
 
 
@@ -36,6 +37,15 @@ class _HomeState extends State<Home> {
         _product.addAll(value);
         product.clear();
         product.addAll(value);
+      });
+    });
+
+
+    _FetchCat().then((value) {
+      setState(() {
+        _cat.addAll(value);
+        cat.clear();
+        cat.addAll(value);
       });
     });
     super.initState();
@@ -59,6 +69,35 @@ class _HomeState extends State<Home> {
 
 
   ////////lana////
+
+
+
+
+  /////////2//////////
+  ///////lana///
+  List<CatModel> _cat= <CatModel>[];
+
+
+  Future<List<CatModel>> _FetchCat() async {
+    var response = await CallApi().getdata('categories');
+    // print(response.body);
+    var cat = <CatModel>[];
+    var item = json.decode(response.body);
+    print(item);
+
+    for (var i in item) {
+      cat.add(CatModel.fromJson(i));
+      print("iam heeeeeerererrerre");
+    }
+
+    return cat;
+  }
+
+
+
+  ////////lana////
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +138,46 @@ class _HomeState extends State<Home> {
                   (context, index) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 8.0, left: 8.0, right: 8.0),
+                            child: Text('Shop By Category',
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.secondary,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                right: 8.0, top: 8.0, left: 8.0),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Theme.of(context).primaryColor
+                                ),
+                                child: Text('View All',
+                                    style: TextStyle(color: Colors.white)),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/categorise');
+                                }),
+                          )
+                        ],
+                      ),
+                      Container(
+                        child: Padding(
+                          padding:
+                          EdgeInsets.only(top: 6.0, left: 8.0, right: 8.0),
+                          child: Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage('assets/images/banner-1.png'),
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding:
-                            EdgeInsets.only(top: 14.0, left: 8.0, right: 8.0),
+                        EdgeInsets.only(top: 14.0, left: 8.0, right: 8.0),
                         child: Text(
                             AppLocalizations.of(context)!
                                 .translate('NEW_ARRIVALS') ?? '',
@@ -110,6 +186,7 @@ class _HomeState extends State<Home> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700)),
                       ),
+
                       Container(
                         margin: EdgeInsets.symmetric(vertical: 8.0),
                         height: 240.0,
@@ -139,7 +216,7 @@ class _HomeState extends State<Home> {
                             tag: '$index',
                             child: CachedNetworkImage(
                             fit: BoxFit.cover,
-                            imageUrl:'http://10.0.2.2:8000/image/${_product[index].image}' ,
+                            imageUrl:'http://192.168.43.121:8000/upload/${_product[index].image}' ,
                             placeholder: (context, url) =>
                             Center(
                               child:
@@ -168,104 +245,72 @@ class _HomeState extends State<Home> {
                               ),
                               );}
 
-
-
                               ),
                               ),
 
 
 
 
-
-
-
-                          Container(
-                        child: Padding(
-                          padding:
-                              EdgeInsets.only(top: 6.0, left: 8.0, right: 8.0),
-                          child: Image(
-                            fit: BoxFit.cover,
-                            image: AssetImage('assets/images/banner-1.png'),
-                          ),
-                        ),
+                      // Container(
+                      //   child: GridView.count(
+                      //     shrinkWrap: true,
+                      //     physics: NeverScrollableScrollPhysics(),
+                      //     crossAxisCount: 2,
+                      //     padding: EdgeInsets.only(
+                      //         top: 8, left: 6, right: 6, bottom: 12),
+                      //     children: List.generate(_cat.length, (index) {
+                      //       return Container(
+                      //         child: Card(
+                      //           clipBehavior: Clip.antiAlias,
+                      //           child: InkWell(
+                      //             onTap: () {
+                      //               print('Card tapped.');
+                      //             },
+                      //             child: Column(
+                      //               crossAxisAlignment:
+                      //                   CrossAxisAlignment.start,
+                      //               children: <Widget>[
+                      //                 SizedBox(
+                      //                   height:
+                      //                       (MediaQuery.of(context).size.width /2) -70,
+                      //                   width: double.infinity,
+                      //                   child: CachedNetworkImage(
+                      //                     fit: BoxFit.cover,
+                      //                     imageUrl: 'http://10.0.2.2:8000/categories/${_cat[index].image}',
+                      //                     placeholder: (context, url) => Center(
+                      //                         child:
+                      //                             CircularProgressIndicator()),
+                      //                     errorWidget: (context, url, error) =>
+                      //                         new Icon(Icons.error),
+                      //                   ),
+                      //                 ),
+                      //                 ListTile(
+                      //                     title: Text(
+                      //                       _cat[index].name,
+                      //                   style: TextStyle(
+                      //                       fontWeight: FontWeight.w700,
+                      //                       fontSize: 16),
+                      //                 ))
+                      //               ],
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       );
+                      //     }),
+                      //   ),
+                      // ),
+                      Padding(
+                        padding:
+                        EdgeInsets.only(top: 14.0, left: 8.0, right: 8.0),
+                        child: Text(
+                            AppLocalizations.of(context)!
+                                .translate('NEW_ARRIVALS') ?? '',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700)),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: 8.0, left: 8.0, right: 8.0),
-                            child: Text('Shop By Category',
-                                style: TextStyle(
-                                    color: Theme.of(context).colorScheme.secondary,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                right: 8.0, top: 8.0, left: 8.0),
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: Theme.of(context).primaryColor
-                                ),
-                                child: Text('View All',
-                                    style: TextStyle(color: Colors.white)),
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/categorise');
-                                }),
-                          )
-                        ],
-                      ),
-                      Container(
-                        child: GridView.count(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          crossAxisCount: 2,
-                          padding: EdgeInsets.only(
-                              top: 8, left: 6, right: 6, bottom: 12),
-                          children: List.generate(4, (index) {
-                            return Container(
-                              child: Card(
-                                clipBehavior: Clip.antiAlias,
-                                child: InkWell(
-                                  onTap: () {
-                                    print('Card tapped.');
-                                  },
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height:
-                                            (MediaQuery.of(context).size.width /
-                                                    2) -
-                                                70,
-                                        width: double.infinity,
-                                        child: CachedNetworkImage(
-                                          fit: BoxFit.cover,
-                                          imageUrl: imgList[index],
-                                          placeholder: (context, url) => Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                          errorWidget: (context, url, error) =>
-                                              new Icon(Icons.error),
-                                        ),
-                                      ),
-                                      ListTile(
-                                          title: Text(
-                                        'Two Gold Rings',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 16),
-                                      ))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
+
                       Container(
                         child: Padding(
                           padding: EdgeInsets.only(

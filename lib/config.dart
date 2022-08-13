@@ -1,1 +1,1 @@
-const String BASE_URL = 'http://10.0.2.2:8000/api/';
+const String BASE_URL = 'http://192.168.43.121:8000/api/';

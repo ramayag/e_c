@@ -1,4 +1,5 @@
 class User {
+
   String name;
   String email;
   String password;
@@ -19,6 +20,7 @@ class User {
 class UserCredential {
   String email;
   String password;
+
   UserCredential({required this.email, required this.password});
 
   factory UserCredential.fromJson(Map<String, dynamic> json) {
